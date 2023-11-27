@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ActivityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 class Activity
@@ -15,9 +16,11 @@ class Activity
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Type(ActivityTypes::class)]
     private ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotNull]
     private ?string $place = null;
 
     #[ORM\Column(length: 255)]
@@ -78,4 +81,11 @@ class Activity
 
         return $this;
     }
+}
+
+enum ActivityTypes
+{
+    case BodyPump;
+    case Spinning;
+    case Pilates;
 }
