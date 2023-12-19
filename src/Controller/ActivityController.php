@@ -7,6 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Activity;
+use App\Entity\ActivityType;
+use App\Entity\ActivityTypes;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Psr\Log\LoggerInterface;
@@ -18,11 +20,19 @@ class ActivityController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, LoggerInterface $logger): JsonResponse
     {
         $logger->debug('Request: '.$request->getContent());
+        $activityJson = json_decode($request->getContent());
+
+        // Consulta el ActivityType del request
+        $activityType = $entityManager->getRepository(ActivityType::class)->findOneBy(array('name' => $activityJson->{'type'}));
+
         $activity = new Activity();
-        $activity->setType('BodyPump');
-        $activity->setMonitor('Miguel Goyena');
-        $activity->setPlace("Aula02");
-        $activity->setDate(date_create());
+        $activity->setActivityType($activityType);
+        $activity->setStartDate(date_create($activityJson->{'date_start'}));
+        $activity->setEndDate(date_create($activityJson->{'date_end'}));
+        //$activity->setType($activityType);
+        //$activity->setMonitor($activityJson->{'monitor'});
+        //$activity->setPlace($activityJson->{'place'});
+        //$activity->setDate(date_create($activityJson->{'date'}));
 
         $errors = $validator->validate($activity);
 

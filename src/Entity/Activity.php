@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\ActivityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 class Activity
@@ -15,77 +14,54 @@ class Activity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\Type(ActivityTypes::class)]
-    private ?string $type = null;
+    #[ORM\Column(type: Types::DATETIMETZ_MUTABLE)]
+    private ?\DateTimeInterface $started_date = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotNull]
-    private ?string $place = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $monitor = null;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ActivityType $activity_type = null;
 
     #[ORM\Column(type: Types::DATETIMETZ_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    private ?\DateTimeInterface $end_date = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->type;
+        return $this->started_date;
     }
 
-    public function setType(string $type): static
+    public function setStartDate(\DateTimeInterface $started_date): static
     {
-        $this->type = $type;
+        $this->started_date = $started_date;
 
         return $this;
     }
 
-    public function getPlace(): ?string
+    public function getActivityType(): ?ActivityType
     {
-        return $this->place;
+        return $this->activity_type;
     }
 
-    public function setPlace(?string $place): static
+    public function setActivityType(?ActivityType $activity_type): static
     {
-        $this->place = $place;
+        $this->activity_type = $activity_type;
 
         return $this;
     }
 
-    public function getMonitor(): ?string
+    public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->monitor;
+        return $this->end_date;
     }
 
-    public function setMonitor(string $monitor): static
+    public function setEndDate(\DateTimeInterface $end_date): static
     {
-        $this->monitor = $monitor;
+        $this->end_date = $end_date;
 
         return $this;
     }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-}
-
-enum ActivityTypes
-{
-    case BodyPump;
-    case Spinning;
-    case Pilates;
 }
