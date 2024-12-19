@@ -21,7 +21,7 @@ class RestaurantsController extends AbstractController
     }
 
     #[Route('/restaurants', name: 'get_restaurants', methods: ['GET'])]
-    public function getRestaurants(#[MapQueryParameter] string $tipo): JsonResponse
+    public function getRestaurants(#[MapQueryParameter] string $tipo = null): JsonResponse
     {
         // Buscamos por el tipo
         if ($tipo == "Italiano") {

@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Model\RestaurantNewDTO;
 use App\Model\RestaurantTypeDTO;
 use App\Model\RestaurantDTO;
+use App\Entity\Restaurant;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RestaurantService
 {
@@ -12,7 +14,7 @@ class RestaurantService
     private $restaurantesItalianos;
     private $restaurant_types;
 
-    public function __construct(){
+    public function __construct(private EntityManagerInterface $entityManager){
 
         // Relleno la información de la BBDD
         $restaurantType1 = new RestaurantTypeDTO(1,"Oriental");
@@ -30,7 +32,8 @@ class RestaurantService
     }
 
     public function getAllRestaurants(): array{
-        return $this->restaurantes;
+        return $this->entityManager->getRepository(Restaurant::class)->findAll();
+        // return $this->restaurantes;
     }
 
     public function getAllRestaurtantTypes(): array{
