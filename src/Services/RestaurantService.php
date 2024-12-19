@@ -6,6 +6,7 @@ use App\Model\RestaurantNewDTO;
 use App\Model\RestaurantTypeDTO;
 use App\Model\RestaurantDTO;
 use App\Entity\Restaurant;
+use App\Entity\RestaurantType;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RestaurantService
@@ -40,7 +41,7 @@ class RestaurantService
 
     public function getAllRestaurtantTypes(): array
     {
-        return $this->restaurant_types;
+        return $this->entityManager->getRepository(RestaurantType::class)->findAll();
     }
 
     public function createRestaurant(RestaurantDTO $newRestaurant): RestaurantDTO
