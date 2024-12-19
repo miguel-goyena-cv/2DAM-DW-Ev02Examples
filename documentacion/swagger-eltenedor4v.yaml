@@ -1,0 +1,142 @@
+openapi: 3.0.3
+info:
+  title: El Tenedor 4V API
+  description: |-
+    API para mantener una BBDD de Restaurante cercanos al Instituto 4V
+  contact:
+    email: miguel_goyena@cuatrovientos.org
+  version: 0.1.1
+servers:
+  - url: http://localhost:8000
+tags:
+  - name: restaurants
+    description: Everything about restaurants
+  - name: restaurants-types
+    description: Everything about the types of restaurantes
+paths:
+  /restaurants:
+    get:
+      tags:
+        - restaurants
+      summary: Finds ALl Restaurants
+      operationId: findAllRestaurants
+      parameters:
+        - name: tipo
+          in: query
+          description: Tipos a filtrar
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns OK in all restaurants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Restaurantes'          
+        '400':
+          description: Any problem in server
+    post:
+      tags:
+        - restaurants
+      summary: Add a new restaurant
+      description: Add a new restaurant 
+      operationId: addRestaurant
+      requestBody:
+        description: Create a new Restaurant
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantesNew'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurantes'          
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+  /restaurant-types:
+    get:
+      tags:
+        - restaurants
+      summary: Finds the types of restaurants available
+      operationId: findAllTypes
+      responses:
+        '200':
+          description: Returns OK in all the restaurant types
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/RestaurantTypes'          
+        '400':
+          description: Any problem in server
+  /restaurants/{id}:
+    get:
+      tags:
+        - restaurants
+      summary: Finds a concrete restaurant
+      operationId: findRest
+      parameters:
+        - name: id
+          in: path
+          description: El ID que quiero obtener
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns OK with a single restaurant
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Restaurantes'          
+        '400':
+          description: Any problem in server
+components:
+  schemas:
+    Restaurantes:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: La Taggliatella
+        rest-type:
+          type: object
+          $ref: '#/components/schemas/RestaurantTypes'
+    RestaurantesNew:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: La Taggliatella
+        resType:
+          type: integer
+          format: int64
+          example: 23
+    RestaurantTypes:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: Oriental
